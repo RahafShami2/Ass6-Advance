@@ -25,6 +25,7 @@ void goToxy(int x, int y)
 	coordinate.X = x; coordinate.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinate);
 }
+
 ///////////////////////////////change fun name "SetColor" to "setColor"//////////////////////////
 void setColor(int forgC)
 {
@@ -168,10 +169,9 @@ const char* getDay(int theDay, int theMonth, int theYear) {
 	////////////////////////////delete else////////////////////////////////
 	return("Please give year more than 1600");
 }
-
-
+///////////////////////////put "FILE* filePrint;" out of the functions/////////////////////////////////////
+FILE* filePrint;
 int checkNote(int theDay, int theMonth) {
-	FILE* filePrint;
 	filePrint = fopen("note.dat", "rb");
 	if (filePrint == NULL) {
 		printf("Error in Opening the file");
@@ -185,22 +185,8 @@ int checkNote(int theDay, int theMonth) {
 	fclose(filePrint);
 	return 0;
 }
-
-void printMonth(int mon, int year, int x, int y) { 
-	////////////rename "nod" to "numOfDay" AND "calNote" to "calNote" AND "d" to "theDay" 
-	int numOfDay, day, calNote, theDay = 1, x1 = x, y1 = y, isNote = 0;
-	if (!(mon >= 1 && mon <= numMonth)) {
-		printf("INVALID MONTH");
-		_getch();
-		return;
-	}
-	if (!(year >= minYear)) {
-		printf("INVALID YEAR");
-		_getch();
-		return;
-	}
-	goToxy(20, y);
-	printf("---------------------------\n");
+//////////////create function to print the structure of callender ////////////////
+void printCal(int mon, int year, int x, int y) {
 	goToxy(25, 6);
 	switch (mon) {
 	case 1: printf("January"); break;
@@ -224,9 +210,11 @@ void printMonth(int mon, int year, int x, int y) {
 	goToxy(x, y);
 	printf("S   M   T   W   T   F   S   ");
 	y++;
-	numOfDay = getNumberOfDays(mon, year);
+}
+void printDay() {
+	int calNote, day;
 	day = dayNumber(theDay, mon, year);
-	switch (day) { 
+	switch (day) {
 	case 0:
 		x = x;
 		calNote = 1;
@@ -259,6 +247,29 @@ void printMonth(int mon, int year, int x, int y) {
 		printf("INVALID DATA FROM THE getOddNumber()MODULE");
 		return;
 	}
+}
+void printMonth(int mon, int year, int x, int y) { 
+	////////////rename "nod" to "numOfDay" AND "calNote" to "calNote" AND "d" to "theDay" 
+	int numOfDay, calNote, theDay = 1, x1 = x,  isNote = 0;
+	if (!(mon >= 1 && mon <= numMonth)) {
+		printf("INVALID MONTH");
+		_getch();
+		return;
+	}
+	if (!(year >= minYear)) {
+		printf("INVALID YEAR");
+		_getch();
+		return;
+	}
+	goToxy(20, y);
+	printf("---------------------------\n");
+	
+	printCal();
+
+	numOfDay = getNumberOfDays(mon, year);
+
+	printDay();
+
 	goToxy(x, y);
 	if (calNote == 1) {
 		setColor(12);
@@ -296,7 +307,6 @@ void printMonth(int mon, int year, int x, int y) {
 }
 
 void AddNote() {
-	FILE* filePrint;
 	filePrint = fopen("note.dat", "ab+");
 	system("cls");
 	goToxy(5, 7);
@@ -324,7 +334,6 @@ void AddNote() {
 }
 
 void showNote(int theMonth) {
-	FILE* filePrint;
 	int i = 0, isFound = 0;
 	system("cls");
 	filePrint = fopen("note.dat", "rb");
@@ -383,12 +392,12 @@ int main() {
 					system("cls");
 					printMonth(date.theMonth, date.theYear, 20, 5);
 				}
-				else if (ch == 'p') {
+				if (ch == 'p') {
 					decreaseMonth(&date.theMonth, &date.theYear);
 					system("cls");
 					printMonth(date.theMonth, date.theYear, 20, 5);
 				}
-				else if (ch == 's') {
+				if (ch == 's') {
 					showNote(date.theMonth);
 					system("cls");
 				}
@@ -403,3 +412,4 @@ int main() {
 	}
 	return 0;
 }
+
