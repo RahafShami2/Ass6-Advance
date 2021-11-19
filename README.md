@@ -1,3 +1,4 @@
+////////I put all the changed in comments in the code ////////////////////
 make the code smart by merging some lines with each other
 disply the "dd" to "theDay" & "mm" to "theMonth" & "yy" to "theYear"
 change variable ForgC/BackC to forgC/backC
